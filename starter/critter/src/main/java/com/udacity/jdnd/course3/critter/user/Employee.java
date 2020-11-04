@@ -1,10 +1,12 @@
 package com.udacity.jdnd.course3.critter.user;
 
 import com.sun.istack.NotNull;
+import com.udacity.jdnd.course3.critter.schedule.Schedule;
 import org.hibernate.annotations.Nationalized;
 
 import javax.persistence.*;
 import java.time.DayOfWeek;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -17,11 +19,25 @@ public class Employee {
     @Nationalized
     private String name;
 
-    @NotNull
+    @ElementCollection
     @Enumerated(EnumType.STRING)
     private Set<EmployeeSkill> skills;
 
+    @ElementCollection
+    @Enumerated(EnumType.STRING)
     private Set<DayOfWeek> daysAvailable;
+
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "schedule_id", referencedColumnName = "id")
+//    private Schedule schedule;
+//
+//    public Schedule getSchedule() {
+//        return schedule;
+//    }
+//
+//    public void setSchedule(Schedule schedule) {
+//        this.schedule = schedule;
+//    }
 
     public Employee() {
     }

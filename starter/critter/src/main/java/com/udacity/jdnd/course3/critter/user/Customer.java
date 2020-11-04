@@ -1,5 +1,6 @@
 package com.udacity.jdnd.course3.critter.user;
 
+import com.udacity.jdnd.course3.critter.pet.Pet;
 import org.hibernate.annotations.Nationalized;
 
 import javax.persistence.*;
@@ -18,7 +19,15 @@ public class Customer {
     private String notes;
 
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "customer", cascade = CascadeType.ALL)
-    private List<Long> petIds;
+    private List<Pet> petIds;
+
+    public List<Pet> getPetIds() {
+        return petIds;
+    }
+
+    public void setPetIds(List<Pet> petIds) {
+        this.petIds = petIds;
+    }
 
     public Customer() {
     }
@@ -55,11 +64,11 @@ public class Customer {
         this.notes = notes;
     }
 
-    public List<Long> getPetIds() {
-        return petIds;
-    }
+//    public List<Long> getPetIds() {
+//        return petIds;
+//    }
 
-    public void setPetIds(List<Long> petIds) {
-        this.petIds = petIds;
-    }
+//    public void setPetIds(List<Long> petIds) {
+//        this.petIds = petIds;
+//    }
 }

@@ -1,5 +1,8 @@
 package com.udacity.jdnd.course3.critter.schedule;
 
+import com.sun.istack.NotNull;
+import com.udacity.jdnd.course3.critter.pet.Pet;
+import com.udacity.jdnd.course3.critter.user.Employee;
 import com.udacity.jdnd.course3.critter.user.EmployeeSkill;
 
 import javax.persistence.*;
@@ -14,13 +17,42 @@ public class Schedule {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "schedule", cascade = CascadeType.ALL)
-    private List<Long> employeeIds;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "schedule_employee",
+            joinColumns = { @JoinColumn(name = "schedule_id") },
+            inverseJoinColumns = { @JoinColumn(name = "employee_id") }
+    )
+    private List<Employee> employeeIds;
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "schedule", cascade = CascadeType.ALL)
-    private List<Long> petIds;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "schedule_pet",
+            joinColumns = { @JoinColumn(name = "schedule_id") },
+            inverseJoinColumns = { @JoinColumn(name = "pet_id") }
+    )
+    private List<Pet> petIds;
+
+    public List<Employee> getEmployeeIds() {
+        return employeeIds;
+    }
+
+    public void setEmployeeIds(List<Employee> employeeIds) {
+        this.employeeIds = employeeIds;
+    }
+
+    public List<Pet> getPetIds() {
+        return petIds;
+    }
+
+    public void setPetIds(List<Pet> petIds) {
+        this.petIds = petIds;
+    }
 
     private LocalDate date;
+
+    @ElementCollection
+    @Enumerated(EnumType.STRING)
     private Set<EmployeeSkill> activities;
 
     public Schedule() {
@@ -32,22 +64,6 @@ public class Schedule {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public List<Long> getEmployeeIds() {
-        return employeeIds;
-    }
-
-    public void setEmployeeIds(List<Long> employeeIds) {
-        this.employeeIds = employeeIds;
-    }
-
-    public List<Long> getPetIds() {
-        return petIds;
-    }
-
-    public void setPetIds(List<Long> petIds) {
-        this.petIds = petIds;
     }
 
     public LocalDate getDate() {
