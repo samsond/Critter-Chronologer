@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -46,7 +47,15 @@ public class UserController {
 
     @GetMapping("/customer")
     public List<CustomerDTO> getAllCustomers(){
-        throw new UnsupportedOperationException();
+
+        List<Customer> customers = customerService.findAllCustomers();
+        List<CustomerDTO> customerDTOS = new ArrayList<>();
+
+        for (Customer customer: customers) {
+            customerDTOS.add(convertEntityToCustomerDTO(customer));
+        }
+
+        return customerDTOS;
     }
 
     @GetMapping("/customer/pet/{petId}")
