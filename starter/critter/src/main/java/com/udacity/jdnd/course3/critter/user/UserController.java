@@ -2,6 +2,7 @@ package com.udacity.jdnd.course3.critter.user;
 
 import com.udacity.jdnd.course3.critter.pet.Pet;
 import com.udacity.jdnd.course3.critter.pet.PetDTO;
+import com.udacity.jdnd.course3.critter.pet.PetService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,9 @@ public class UserController {
 
     @Autowired
     private CustomerService customerService;
+
+    @Autowired
+    private PetService petService;
 
     private static CustomerDTO convertEntityToCustomerDTO(Customer customer) {
         CustomerDTO customerDTO = new CustomerDTO();
@@ -60,7 +64,17 @@ public class UserController {
 
     @GetMapping("/customer/pet/{petId}")
     public CustomerDTO getOwnerByPet(@PathVariable long petId){
-        throw new UnsupportedOperationException();
+
+        Pet pet = petService.getPet(petId);
+
+        if (pet.getOwnerId() == null) {
+            throw new CustomerNotFoundException("There is no owner for ID: " + petId);
+        }
+
+        Customer customer = pet.getOwnerId();
+
+        return convertEntityToCustomerDTO(customer);
+
     }
 
     @PostMapping("/employee")
