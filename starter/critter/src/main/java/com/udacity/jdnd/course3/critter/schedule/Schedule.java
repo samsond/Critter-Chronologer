@@ -17,36 +17,36 @@ public class Schedule {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "schedule_employee",
-            joinColumns = { @JoinColumn(name = "schedule_id") },
-            inverseJoinColumns = { @JoinColumn(name = "employee_id") }
-    )
-    private List<Employee> employeeIds;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Employee.class)
+//    @JoinTable(
+//            name = "schedule_employee",
+//            joinColumns = { @JoinColumn(name = "schedule_id") },
+//            inverseJoinColumns = { @JoinColumn(name = "employee_id") }
+//    )
+    private List<Employee> employees;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "schedule_pet",
-            joinColumns = { @JoinColumn(name = "schedule_id") },
-            inverseJoinColumns = { @JoinColumn(name = "pet_id") }
-    )
-    private List<Pet> petIds;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Pet.class)
+//    @JoinTable(
+//            name = "schedule_pet",
+//            joinColumns = { @JoinColumn(name = "schedule_id") },
+//            inverseJoinColumns = { @JoinColumn(name = "pet_id") }
+//    )
+    private List<Pet> pets;
 
-    public List<Employee> getEmployeeIds() {
-        return employeeIds;
+    public List<Employee> getEmployees() {
+        return employees;
     }
 
-    public void setEmployeeIds(List<Employee> employeeIds) {
-        this.employeeIds = employeeIds;
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
     }
 
-    public List<Pet> getPetIds() {
-        return petIds;
+    public List<Pet> getPets() {
+        return pets;
     }
 
-    public void setPetIds(List<Pet> petIds) {
-        this.petIds = petIds;
+    public void setPets(List<Pet> pets) {
+        this.pets = pets;
     }
 
     private LocalDate date;
