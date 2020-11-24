@@ -16,9 +16,13 @@ public class PetController {
     @Autowired
     private PetService petService;
 
-    private static PetDTO convertEntityToPetDTO(Pet plant) {
+    private static PetDTO convertEntityToPetDTO(Pet pet) {
+
         PetDTO petDTO = new PetDTO();
-        BeanUtils.copyProperties(plant, petDTO);
+        BeanUtils.copyProperties(pet, petDTO);
+        if (pet.getCustomer() != null) {
+            petDTO.setOwnerId(pet.getCustomer().getId());
+        }
         return petDTO;
     }
 
@@ -42,7 +46,10 @@ public class PetController {
 
     @GetMapping("/{petId}")
     public PetDTO getPet(@PathVariable long petId) {
-        throw new UnsupportedOperationException();
+
+        Pet pet = petService.getPet(petId);
+
+        return convertEntityToPetDTO(pet);
     }
 
     @GetMapping
