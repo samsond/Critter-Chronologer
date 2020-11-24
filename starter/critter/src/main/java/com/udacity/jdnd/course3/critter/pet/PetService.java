@@ -3,6 +3,7 @@ package com.udacity.jdnd.course3.critter.pet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,6 +25,16 @@ public class PetService {
         }
 
         return pet;
+    }
+
+    public List<Pet> getPets() {
+        List<Pet> pets = petRepo.findAll();
+
+        if (pets.isEmpty()) {
+            throw new PetNotFoundException("There is no pets to return");
+        }
+
+        return pets;
     }
 
     public Pet savePet(Pet pet) {
