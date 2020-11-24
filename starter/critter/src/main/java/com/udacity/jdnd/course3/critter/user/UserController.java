@@ -144,7 +144,10 @@ public class UserController {
 
     @PostMapping("/employee/{employeeId}")
     public EmployeeDTO getEmployee(@PathVariable long employeeId) {
-        throw new UnsupportedOperationException();
+
+        Employee employee = employeeService.getEmployee(employeeId);
+
+        return convertEntityToEmployeeDTO(employee);
     }
 
     @PutMapping("/employee/{employeeId}")
