@@ -1,8 +1,11 @@
 package com.udacity.jdnd.course3.critter.pet;
 
+import com.udacity.jdnd.course3.critter.user.Customer;
+import com.udacity.jdnd.course3.critter.user.CustomerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +14,9 @@ public class PetService {
 
     @Autowired
     private PetRepo petRepo;
+
+    @Autowired
+    private CustomerRepo customerRepo;
 
     public Pet getPet(long id) {
 
@@ -32,6 +38,17 @@ public class PetService {
 
         if (pets.isEmpty()) {
             throw new PetNotFoundException("There is no pets to return");
+        }
+
+        return pets;
+    }
+
+    public List<Pet> getPetsByOwner(long ownerId) {
+        Customer customer = customerRepo.getOne(ownerId);
+        List<Pet> pets = petRepo.findByCustomer(customer);
+
+        if (pets.isEmpty()) {
+            throw new PetNotFoundException("There is no pets with owner id " +ownerId);
         }
 
         return pets;
