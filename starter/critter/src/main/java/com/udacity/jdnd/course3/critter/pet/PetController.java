@@ -4,7 +4,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Handles web requests related to Pets.
@@ -54,7 +56,11 @@ public class PetController {
 
     @GetMapping
     public List<PetDTO> getPets(){
-        throw new UnsupportedOperationException();
+        List<Pet> pets = petService.getPets();
+
+        List<PetDTO> petsDTO = pets.stream().map(PetController::convertEntityToPetDTO).collect(Collectors.toList());
+
+        return petsDTO;
     }
 
     @GetMapping("/owner/{ownerId}")
