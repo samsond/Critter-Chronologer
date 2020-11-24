@@ -29,8 +29,15 @@ public class UserController {
     private PetService petService;
 
     private static CustomerDTO convertEntityToCustomerDTO(Customer customer) {
+        List<Long> petId = new ArrayList<>();
         CustomerDTO customerDTO = new CustomerDTO();
         BeanUtils.copyProperties(customer, customerDTO);
+        if (customer.getPets() != null) {
+            for (Pet pet: customer.getPets()) {
+                petId.add(pet.getId());
+            }
+            customerDTO.setPetIds(petId);
+        }
         return customerDTO;
     }
 
@@ -42,8 +49,37 @@ public class UserController {
 
     @PostMapping("/customer")
     public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO){
+        List<Pet> pets = new ArrayList<>();
+        if (customerDTO.getPetIds() != null) {
+
+
+            for (Long petId: customerDTO.getPetIds()) {
+                Pet pet = petService.getPet(petId);
+                // check whether a pet is associated with a customer
+                // before saving
+//                if (pet !=null  && pet.getCustomer() != null) {
+//
+//                }
+                if (pet != null) {
+                    pets.add(pet);
+                }
+
+            }
+        }
+
         Customer customer = convertCustomerDTOToEntity(customerDTO);
+
+        if (pets != null) {
+            customer.setPets(pets);
+        }
+
         customer = customerService.saveCustomer(customer);
+
+        for (Pet pet: pets) {
+
+            pet.setCustomer(customer);
+            petService.savePet(pet);
+        }
 
         return convertEntityToCustomerDTO(customer);
 
@@ -67,11 +103,11 @@ public class UserController {
 
         Pet pet = petService.getPet(petId);
 
-        if (pet.getOwnerId() == null) {
+        if (pet.getCustomer() == null) {
             throw new CustomerNotFoundException("There is no owner for ID: " + petId);
         }
 
-        Customer customer = pet.getOwnerId();
+        Customer customer = pet.getCustomer();
 
         return convertEntityToCustomerDTO(customer);
 

@@ -27,15 +27,19 @@ public class PetService {
     }
 
     public Pet savePet(Pet pet) {
-//        if (pet.getId() != null) {
-//            return petRepo.findById(pet.getId())
-//                    .map(petToBeUpdated -> {
-//                        petToBeUpdated.setType(pet.getType());
-//                        petToBeUpdated.setName(pet.getName());
-//                        petToBeUpdated.setNotes(pet.getNotes());
-//                        return petRepo.save(petToBeUpdated);
-//                    }).orElseThrow(PetNotFoundException::new);
-//        }
+        if (pet.getCustomer() != null) {
+            return petRepo.findById(pet.getId())
+                    .map(petToBeUpdated -> {
+                        petToBeUpdated.setType(pet.getType());
+                        petToBeUpdated.setName(pet.getName());
+                        petToBeUpdated.setNotes(pet.getNotes());
+                        if (pet.getCustomer() != null) {
+                            petToBeUpdated.setCustomer(pet.getCustomer());
+                        }
+
+                        return petRepo.save(petToBeUpdated);
+                    }).orElseThrow(PetNotFoundException::new);
+        }
 
         return petRepo.save(pet);
     }
