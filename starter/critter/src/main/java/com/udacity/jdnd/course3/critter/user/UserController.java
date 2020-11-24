@@ -28,6 +28,9 @@ public class UserController {
     @Autowired
     private PetService petService;
 
+    @Autowired
+    private EmployeeService employeeService;
+
     private static CustomerDTO convertEntityToCustomerDTO(Customer customer) {
         List<Long> petId = new ArrayList<>();
         CustomerDTO customerDTO = new CustomerDTO();
@@ -45,6 +48,22 @@ public class UserController {
         Customer customer = new Customer();
         BeanUtils.copyProperties(customerDTO, customer);
         return customer;
+    }
+
+    private static EmployeeDTO convertEntityToEmployeeDTO(Employee employee) {
+        List<Long> employeeId = new ArrayList<>();
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+
+        BeanUtils.copyProperties(employee, employeeDTO);
+
+        return employeeDTO;
+    }
+
+    private static Employee convertEmployeeDTOToEntity(EmployeeDTO employeeDTO) {
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeDTO, employee);
+
+        return employee;
     }
 
     @PostMapping("/customer")
@@ -115,7 +134,12 @@ public class UserController {
 
     @PostMapping("/employee")
     public EmployeeDTO saveEmployee(@RequestBody EmployeeDTO employeeDTO) {
-        throw new UnsupportedOperationException();
+
+        Employee employee = convertEmployeeDTOToEntity(employeeDTO);
+
+        employee = employeeService.saveEmployee(employee);
+
+        return convertEntityToEmployeeDTO(employee);
     }
 
     @PostMapping("/employee/{employeeId}")
