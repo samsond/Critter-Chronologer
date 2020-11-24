@@ -1,6 +1,7 @@
 package com.udacity.jdnd.course3.critter.user;
 
 import com.udacity.jdnd.course3.critter.pet.Pet;
+import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.Nationalized;
 
 import javax.persistence.*;
@@ -21,21 +22,30 @@ public class Customer {
 //    @OneToMany(fetch = FetchType.LAZY,mappedBy = "customer", cascade = CascadeType.ALL)
 //    private List<Long> petIds;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "customer_pet",
-            joinColumns = { @JoinColumn(name = "customer_id") },
-            inverseJoinColumns = { @JoinColumn(name = "pet_id") }
-    )
-    private List<Pet> petIds;
+    @OneToMany(mappedBy = "customer", targetEntity = Pet.class)
+//    @JoinTable(
+//            name = "customer_pet",
+//            joinColumns = { @JoinColumn(name = "customer_id") },
+//            inverseJoinColumns = { @JoinColumn(name = "pet_id") }
+//    )
+//    @JsonIgnore
+    private List<Pet> pets;
 
-    public List<Pet> getPetIds() {
-        return petIds;
+    public List<Pet> getPets() {
+        return pets;
     }
 
-    public void setPetIds(List<Pet> petIds) {
-        this.petIds = petIds;
+    public void setPets(List<Pet> pets) {
+        this.pets = pets;
     }
+
+//    public List<Pet> getPetIds() {
+//        return petIds;
+//    }
+//
+//    public void setPetIds(List<Pet> petIds) {
+//        this.petIds = petIds;
+//    }
 
     public Customer() {
     }

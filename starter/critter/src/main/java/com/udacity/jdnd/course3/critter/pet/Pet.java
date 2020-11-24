@@ -3,6 +3,7 @@ package com.udacity.jdnd.course3.critter.pet;
 import com.sun.istack.NotNull;
 import com.udacity.jdnd.course3.critter.schedule.Schedule;
 import com.udacity.jdnd.course3.critter.user.Customer;
+import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.Nationalized;
 
 import javax.persistence.*;
@@ -23,11 +24,20 @@ public class Pet {
     @Nationalized
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id")
-    private Customer ownerId;
+    @ManyToOne(targetEntity = Customer.class)
+//    @JoinColumn(name = "owner_id")
+//    @JsonIgnore
+    private Customer customer;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "schedule_id", referencedColumnName = "id")
 //    private Schedule schedule;
 //
@@ -71,13 +81,13 @@ public class Pet {
         this.name = name;
     }
 
-    public Customer getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(Customer ownerId) {
-        this.ownerId = ownerId;
-    }
+//    public Customer getOwnerId() {
+//        return ownerId;
+//    }
+//
+//    public void setOwnerId(Customer ownerId) {
+//        this.ownerId = ownerId;
+//    }
 
     public LocalDate getBirthDate() {
         return birthDate;
@@ -101,7 +111,7 @@ public class Pet {
                 "id=" + id +
                 ", type=" + type +
                 ", name='" + name + '\'' +
-                ", customer=" + ownerId +
+                ", customer=" + customer +
                 ", birthDate=" + birthDate +
                 ", notes='" + notes + '\'' +
                 '}';
