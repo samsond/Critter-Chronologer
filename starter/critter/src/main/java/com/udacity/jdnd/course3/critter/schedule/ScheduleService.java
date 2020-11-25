@@ -36,4 +36,8 @@ public class ScheduleService {
 
         return schedules;
     }
+
+    public List<Schedule> findAllSchedules() {
+        return scheduleRepo.findAll();
+    }
 }
