@@ -33,6 +33,30 @@ public class ScheduleController {
 
         BeanUtils.copyProperties(schedule, scheduleDTO);
 
+        if (schedule.getEmployees() != null) {
+            List<Long> employeeIds = new ArrayList<>();
+
+            for (Employee employee: schedule.getEmployees()) {
+                employeeIds.add(employee.getId());
+            }
+
+            if (!employeeIds.isEmpty()) {
+                scheduleDTO.setEmployeeIds(employeeIds);
+            }
+        }
+
+        if (schedule.getPets() != null) {
+            List<Long> petIds = new ArrayList<>();
+
+            for (Pet pet: schedule.getPets()) {
+                petIds.add(pet.getId());
+            }
+
+            if (!petIds.isEmpty()) {
+                scheduleDTO.setPetIds(petIds);
+            }
+        }
+
         return scheduleDTO;
     }
 
