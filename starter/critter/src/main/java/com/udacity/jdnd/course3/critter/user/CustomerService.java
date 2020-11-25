@@ -22,10 +22,10 @@ public class CustomerService {
     @Transactional
     public Customer saveCustomer(Customer customer) {
 
-//        if (customer.getPetIds() != null) {
+//        if (customer.getPets() != null) {
 //
 //
-//            for (Pet petId: customer.getPetIds()) {
+//            for (Pet petId: customer.getPets()) {
 //                Pet pet = petService.getPet(petId.getId());
 //                if (pet != null) {
 //                    petService.savePet(pet);
@@ -40,7 +40,25 @@ public class CustomerService {
         return customerRepo.save(customer);
     }
 
+    public void addPetToCustomer(Pet pet, Customer customer) {
+        List<Pet> petList = customer.getPets();
+
+        if (petList == null) {
+            petList = new ArrayList<>();
+
+        }
+        petList.add(pet);
+
+        customer.setPets(petList);
+
+        customerRepo.save(customer);
+    }
+
     public List<Customer> findAllCustomers() {
         return customerRepo.findAll();
+    }
+
+    public Customer findCustomer(Long id) {
+        return customerRepo.getOne(id);
     }
 }

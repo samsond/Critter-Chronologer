@@ -2,6 +2,7 @@ package com.udacity.jdnd.course3.critter.pet;
 
 import com.udacity.jdnd.course3.critter.user.Customer;
 import com.udacity.jdnd.course3.critter.user.CustomerRepo;
+import com.udacity.jdnd.course3.critter.user.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,9 @@ public class PetService {
 
     @Autowired
     private CustomerRepo customerRepo;
+
+    @Autowired
+    private CustomerService customerService;
 
     public Pet getPet(long id) {
 
@@ -55,20 +59,26 @@ public class PetService {
     }
 
     public Pet savePet(Pet pet) {
-        if (pet.getCustomer() != null) {
-            return petRepo.findById(pet.getId())
-                    .map(petToBeUpdated -> {
-                        petToBeUpdated.setType(pet.getType());
-                        petToBeUpdated.setName(pet.getName());
-                        petToBeUpdated.setNotes(pet.getNotes());
-                        if (pet.getCustomer() != null) {
-                            petToBeUpdated.setCustomer(pet.getCustomer());
-                        }
+//        if (pet.getCustomer() != null) {
+//            System.out.println("############################### customer id " + pet.getCustomer().getId());
+//            return petRepo.findById(pet.getId())
+//                    .map(petToBeUpdated -> {
+//                        petToBeUpdated.setType(pet.getType());
+//                        petToBeUpdated.setName(pet.getName());
+//                        petToBeUpdated.setNotes(pet.getNotes());
+//                        if (pet.getCustomer() != null) {
+//                            petToBeUpdated.setCustomer(pet.getCustomer());
+//                        }
+//
+//                        return petRepo.save(petToBeUpdated);
+//                    }).orElseThrow(PetNotFoundException::new);
+//        }
 
-                        return petRepo.save(petToBeUpdated);
-                    }).orElseThrow(PetNotFoundException::new);
-        }
+        pet = petRepo.save(pet);
 
-        return petRepo.save(pet);
+        customerService.addPetToCustomer(pet, pet.getCustomer());
+        return pet;
+
+
     }
 }

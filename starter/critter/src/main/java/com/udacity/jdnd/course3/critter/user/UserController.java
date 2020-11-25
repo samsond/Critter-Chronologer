@@ -33,14 +33,19 @@ public class UserController {
     private EmployeeService employeeService;
 
     private static CustomerDTO convertEntityToCustomerDTO(Customer customer) {
-        List<Long> petId = new ArrayList<>();
+
         CustomerDTO customerDTO = new CustomerDTO();
         BeanUtils.copyProperties(customer, customerDTO);
-        if (customer.getPets() != null) {
+        if (customer != null && customer.getPets() != null) {
+            List<Long> petId = new ArrayList<>();
             for (Pet pet: customer.getPets()) {
                 petId.add(pet.getId());
             }
-            customerDTO.setPetIds(petId);
+
+            if (!petId.isEmpty()) {
+                customerDTO.setPetIds(petId);
+            }
+
         }
         return customerDTO;
     }
@@ -69,36 +74,46 @@ public class UserController {
 
     @PostMapping("/customer")
     public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO){
+        Customer customer = convertCustomerDTOToEntity(customerDTO);
         List<Pet> pets = new ArrayList<>();
         if (customerDTO.getPetIds() != null) {
 
 
             for (Long petId: customerDTO.getPetIds()) {
+
                 Pet pet = petService.getPet(petId);
+
+                if (pet != null) {
+                    pets.add(pet);
+                }
                 // check whether a pet is associated with a customer
                 // before saving
 //                if (pet !=null  && pet.getCustomer() != null) {
 //
 //                }
-                if (pet != null) {
-                    pets.add(pet);
-                }
+//                if (pet != null) {
+//                    pets.add(pet);
+//                }
 
             }
-        }
 
-        Customer customer = convertCustomerDTOToEntity(customerDTO);
-
-        if (pets != null) {
-            customer.setPets(pets);
+            if (!pets.isEmpty()) {
+                customer.setPets(pets);
+            }
         }
 
         customer = customerService.saveCustomer(customer);
 
         for (Pet pet: pets) {
 
+            if (pet.getCustomer() == null) {
+                pet.setCustomer(customer);
+                petService.savePet(pet);
+            }
+
             pet.setCustomer(customer);
             petService.savePet(pet);
+
         }
 
         return convertEntityToCustomerDTO(customer);
@@ -109,11 +124,11 @@ public class UserController {
     public List<CustomerDTO> getAllCustomers(){
 
         List<Customer> customers = customerService.findAllCustomers();
-        List<CustomerDTO> customerDTOS = new ArrayList<>();
+        List<CustomerDTO> customerDTOS = customers.stream().map(UserController::convertEntityToCustomerDTO).collect(Collectors.toList());
 
-        for (Customer customer: customers) {
-            customerDTOS.add(convertEntityToCustomerDTO(customer));
-        }
+//        for (Customer customer: customers) {
+//            customerDTOS.add(convertEntityToCustomerDTO(customer));
+//        }
 
         return customerDTOS;
     }
