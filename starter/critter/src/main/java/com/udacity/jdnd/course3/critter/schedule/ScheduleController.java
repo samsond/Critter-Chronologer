@@ -122,7 +122,10 @@ public class ScheduleController {
 
     @GetMapping("/pet/{petId}")
     public List<ScheduleDTO> getScheduleForPet(@PathVariable long petId) {
-        throw new UnsupportedOperationException();
+        List<Schedule> scheduleList = scheduleService.findScheduleForPet(petId);
+        List<ScheduleDTO> scheduleDTOList = scheduleList.stream().map(ScheduleController::convertEntityToScheduleDTO).collect(Collectors.toList());
+
+        return scheduleDTOList;
     }
 
     @GetMapping("/employee/{employeeId}")
