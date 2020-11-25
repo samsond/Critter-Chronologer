@@ -17,7 +17,7 @@ public class Schedule {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Employee.class)
+    @ManyToMany(targetEntity = Employee.class)
 //    @JoinTable(
 //            name = "schedule_employee",
 //            joinColumns = { @JoinColumn(name = "schedule_id") },
@@ -80,5 +80,16 @@ public class Schedule {
 
     public void setActivities(Set<EmployeeSkill> activities) {
         this.activities = activities;
+    }
+
+    @Override
+    public String toString() {
+        return "Schedule{" +
+                "id=" + id +
+                ", employees=" + employees +
+                ", pets=" + pets +
+                ", date=" + date +
+                ", activities=" + activities +
+                '}';
     }
 }
